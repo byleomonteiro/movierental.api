@@ -68,10 +68,13 @@ DB_NAME=
      ```bash
      $ npm run start
      ```
+   
+   - 4.Existe um PDF onde exibe o diagrama entidade relacionamento da base de dados.
+     - Localizado na pasta /ER diagram 
 
-   - 4.Existe um arquivo de importação de workspace criado para utilizar como cliente HTTP (Insomnia)
+   - 5.Existe um arquivo de importação de workspace criado para utilizar como cliente HTTP (Insomnia)
      - Localizado na pasta /insomnia no código fonte
 
-   - 5.Link da especificação:
+   - 6.Link da especificação:
         - https://app.swaggerhub.com/apis-docs/Leon4rdoMonteiro/movie-rental.api/1.0
    
