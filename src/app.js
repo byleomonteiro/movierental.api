@@ -1,10 +1,11 @@
 "use strict"
 
-require("./bootstrap")
+require("dotenv/config")
 require("./database")
 require("express-async-errors")
 
 const express = require("express")
+const helmet = require("helmet")
 
 const router = require("./routes/router")
 
@@ -17,6 +18,7 @@ class App {
 
     middlewares() {
         this.server.use(express.json())
+        this.server.use(helmet())
     }
 
     routes() {

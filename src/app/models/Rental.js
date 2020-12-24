@@ -21,13 +21,13 @@ class Rental {
         }
     }
 
-    async findByMovieId(id) {
+    async findByUserAndMovieId({ user_id, movie_id }) {
         try {
-            const sql = `SELECT * FROM RENTALS WHERE movie_id=?`;
+            const sql = `SELECT * FROM RENTALS WHERE user_id=? AND movie_id=?`;
             
             const db = await conn()
     
-            const [[rows]] = await db.query(sql, [id])
+            const [[rows]] = await db.query(sql, [user_id, movie_id])
     
             return rows
         } catch(err){
@@ -35,14 +35,22 @@ class Rental {
         }
     }
 
-    async find() {
+    async find(query) {
         try {
-            const sql = 'SELECT * FROM RENTALS';
+            const { user_id } = query
             
             const db = await conn()
-    
+
+            let sql = 'SELECT * FROM RENTALS\
+                INNER JOIN USERS ON RENTALS.user_id = USERS.id\
+                INNER JOIN MOVIES ON RENTALS.movie_id = MOVIES.id';
+
+            if(user_id){
+                sql += ` WHERE user_id=${user_id}`
+            }
+
             const [rows] = await db.query(sql)
-    
+
             return rows
         } catch(err){
             throw err;

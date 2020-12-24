@@ -3,9 +3,18 @@ const { encrypt } = require("../helpers/encrypt")
 
 class UserService {
     async insert(data){
-        
         try {
             const { name, email, password } = data
+
+            const userExists = await User.findByEmail(email)
+
+            if(userExists){
+                return {
+                    error: true,
+                    statusCode: 400,
+                    message: "User already exists"
+                }
+            }
 
             const hash = await encrypt(password)
 
@@ -14,24 +23,6 @@ class UserService {
             return {
                 error: false,
                 statusCode: 201,
-                data: user
-            }
-        } catch(err){
-            return {
-                error: true,
-                statusCode: 500,
-                message: err.message
-            }
-        }
-    }
-
-    async get(id){
-        try {
-            const user = await User.findOne(id)
-
-            return {
-                error: false,
-                statusCode: 200,
                 data: user
             }
         } catch(err){

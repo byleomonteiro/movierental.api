@@ -1,6 +1,5 @@
 const Movie = require("../models/Movie")
 const Rental = require("../models/Rental")
-const MovieService = require("./MovieService")
 
 class RentalService {
     async insert(data) {
@@ -17,7 +16,7 @@ class RentalService {
                 }
             }
 
-            const movieRented = await Rental.findByMovieId(movie_id)
+            const movieRented = await Rental.findByUserAndMovieId({ user_id, movie_id })
 
             if(movieRented){
                 return {
@@ -31,11 +30,11 @@ class RentalService {
                 return {
                     error: true,
                     statusCode: 400,
-                    message: "No movies available currently"
+                    message: "This movie is not available to rent"
                 }
             }
 
-            const rental = await Rental.create({ user_id, movie_id })
+            await Rental.create({ user_id, movie_id })
 
             const copy_amount = movie.copy_amount - 1
 
@@ -44,7 +43,7 @@ class RentalService {
             return {
                 error: false,
                 statusCode: 201,
-                data: rental
+                message: "Movie rented successfully"
             }
         } catch(err){
             return {
@@ -55,9 +54,17 @@ class RentalService {
         }
     }
 
-    async getAll(){
+    async getAll(query){
         try {
-            const rentals = await Rental.find()
+            const rentals = await Rental.find(query)
+
+            if(!rentals.length){
+                return {
+                    error: true,
+                    statusCode: 404,
+                    message: "No rental was found"
+                }
+            }
     
             return {
                 error: false,
@@ -73,29 +80,32 @@ class RentalService {
         }
     }
 
-    async update(id){
+    async update(data){
         try {
-            const rentals = await Rental.findByMovieId(id)
+            const { user_id, movie_id } = data
 
-            if(!rentals){
+            const rental = await Rental.findByUserAndMovieId({ user_id, movie_id })
+
+            if(!rental){
                 return {
                     error: true,
                     statusCode: 404,
-                    message: "You did not rent this movie"
+                    message: "You did not rent this movie yet"
                 }
             }
 
-            await Rental.delete(id)
+            await Rental.delete(rental.id)
 
-            const movie = await Movie.findOne(id)
+            const movie = await Movie.findOne(movie_id)
 
             const copy_amount = movie.copy_amount + 1
 
-            await Movie.update(id, { copy_amount })
+            await Movie.update(movie_id, { copy_amount })
 
             return {
                 error: false,
-                statusCode: 204,
+                statusCode: 200,
+                message: "Movie returned successfully"
             }
         } catch(err){
             return {

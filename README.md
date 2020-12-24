@@ -8,56 +8,70 @@
 
 Autor: [Leonardo Monteiro](https://github.com/Leon4rdoMonteiro)
 
-#### 🚀 API construída para teste na PHI - Node.js Backend Developer.
+### 🚀 API construída para teste na PHI - Node.js Backend Developer.
 
    + 🌠 Foram utilizadas as tecnologias:
-        - Node.js, Express, JWT, SQL (puro, sem ORM's).
-      
-   + 📝 Padronização de código: </br>
-        - Eslint e Prettier. 
+        - Node.js, Express, JWT, SQL (MySQL), sem ORM's.
       
    + 🛠 Ferramentas/Frameworks:
-        - Docker
+        - Docker, Insomnia
     
    + 🔏 Segurança: 
-        - bcryptjs: Gerador de hashs de senhas padrão.
-        - express-brute: Para proteção contra ataques de força bruta. 
-        - express-rate-limit: Proteção contra requisições maliciosas na rota da aplicação. 
+        - bcrypt: Gerador de hashs de senhas padrão.
         - helmet: Configura cabeçalhos HTTP e protege contra vários ataques como XSS e Sniffing. 
         
+ ## 🖊 Configurações:
 
- ### 🖊 Configurações:
- 
+  - Criar arquivo de váriaveis de ambiente: ```.env``` com base no arquivo: ```.env.example```
 
-  - Criar arquivos de configuração: ```.env e .env.test``` com base nos arquivos: ```.env.example e .env.test.example```
+```js
+NODE_ENV=
+PORT=
+```
  
- 
-  + Criar um APP_SECRET para geração dos tokens e armazenar nas variáveis de ambiente.
+  - Criar um SECRET para geração dos tokens e um SALT para hash de senhas e armazenar nas variáveis de ambiente.
   
 ```js
 SECRET=
+SALT=
 ```
  
- + Alterar variáveis de ambiente para conectar o banco de dados SQL ao Sequelize.
+ + Alterar variáveis de ambiente para conectar-se com o container MySQL
   
 ```js
 DB_HOST=
+DB_PORT=
 DB_USER=
-DB_PASS=
+DB_PASSWORD=
 DB_NAME=
 ```
-    Obs: Criar uma nova base de dados no container para o realizar os testes ou utilizar a base principal. 
+
+     Obs: Criar base de dados utilizando o script SQL localizado na pasta /src/database/db. (MySQL Workbench)
 
 
- ### 🏁 Instalação:
+ ## 🏁 Instalação:
   
-   ##### 1.Instalar todas as dependências:
-        npm install
-   ##### 2. Criando e executando Docker Container:
-        docker-compose up -d
-   ##### 3. Executar API em ambiente de desenvolvimento, porta padrão 3333:
-        npm run dev
-   ##### 4. Renderizando e visualizando documentação da API, porta padrão 3000:
-        npm run doc
-        npm run doc --server
+   - 1.Instalar todas as dependências:
+   
+     ```bash
+     $ npm install
+     ```
+
+   - 2.Criando e executando container do MySQL:
+
+     ```bash
+     $ docker-compose up -d
+     ```
+
+   - 3.Executar API, porta padrão 8000:
+
+     ```bash
+     $ npm run start
+     ```
+
+   - 4.Existe um arquivo de importação de workspace criado para utilizar como cliente HTTP (Insomnia)
+     - Localizado na pasta /insomnia no código fonte
+
+   - 5.Link da especificação:
+        - https://app.swaggerhub.com/apis-docs/Leon4rdoMonteiro/movie-rental.api/1.0
    

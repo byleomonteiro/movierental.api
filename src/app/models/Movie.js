@@ -21,6 +21,20 @@ class Movie {
         }
     }
 
+    async findByTitle(title) {
+        try {
+            const sql = `SELECT * FROM MOVIES WHERE title=?`;
+            
+            const db = await conn()
+    
+            const [[rows]] = await db.query(sql, [title])
+    
+            return rows
+        } catch(err){
+            throw err;
+        }
+    }
+
     async findOne(id) {
         try {
             const sql = `SELECT * FROM MOVIES WHERE id=?`;
@@ -37,12 +51,18 @@ class Movie {
 
     async find(query) {
         try {
-            const { title } = query
+            const { title, available } = query
 
             let sql = 'SELECT * FROM MOVIES'
 
-            if(title){
-                sql = `SELECT * FROM MOVIES WHERE title LIKE '%${title}%'`;
+            if(title) {
+                sql += ` WHERE title LIKE '%${title}%'`;
+
+                if(available === 'true'){
+                    sql += ' AND copy_amount > 0'
+                }
+            } else if(available === 'true'){
+                sql += ' WHERE copy_amount > 0'
             }
 
             const db = await conn()
