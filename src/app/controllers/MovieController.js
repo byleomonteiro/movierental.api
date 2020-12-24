@@ -12,8 +12,11 @@ class MovieController {
     }
 
     async index(req, res){
+        const query = req.query
+
         const movieService = new MovieService()
-        const response = await movieService.getAll()
+        
+        const response = await movieService.getAll(query)
 
         return res.status(response.statusCode).json(response)
     }
@@ -29,6 +32,16 @@ class MovieController {
         return res.status(response.statusCode).json(response)
     }
 
+    async update(req, res) {
+        const { movieId } = req.params
+        const body = req.body
+
+        const movieService = new MovieService()
+
+        const response = await movieService.update(movieId, body)
+
+        return res.status(response.statusCode).json(response)
+    }
 
     async delete(req, res) {
         const { movieId } = req.params

@@ -1,19 +1,19 @@
 const conn = require("../../database")
 
-class Movie {
+class Rental {
     async create(data) {
         try {
-            const { title, director, copy_amount } = data
-    
+            const { user_id, movie_id } = data
+            
             const db = await conn()
     
-            const insertSQL = "INSERT INTO MOVIES (title, director, copy_amount) VALUES (?,?,?);"
-            
-            const [created] = await db.query(insertSQL, [title, director, copy_amount])
+            const insertSQL = "INSERT INTO RENTALS (`user_id`, `movie_id`) VALUES (?,?);"
+
+            const [created] = await db.query(insertSQL, [user_id, movie_id])
+
+            const selectSQL = `SELECT * FROM RENTALS WHERE id = ${created.insertId}`
     
-            const selectSQL = `SELECT * FROM MOVIES WHERE id = ${created.insertId}`
-    
-            const [row] = await db.query((selectSQL))
+            const [[row]] = await db.query((selectSQL))
     
             return row
         } catch(err){
@@ -21,13 +21,13 @@ class Movie {
         }
     }
 
-    async findOne(id) {
+    async findByMovieId(id) {
         try {
-            const sql = `SELECT * FROM MOVIES where id = ${id}`;
+            const sql = `SELECT * FROM RENTALS WHERE movie_id=?`;
             
             const db = await conn()
     
-            const [rows] = await db.query(sql)
+            const [[rows]] = await db.query(sql, [id])
     
             return rows
         } catch(err){
@@ -37,7 +37,7 @@ class Movie {
 
     async find() {
         try {
-            const sql = 'SELECT * FROM MOVIES';
+            const sql = 'SELECT * FROM RENTALS';
             
             const db = await conn()
     
@@ -51,11 +51,11 @@ class Movie {
 
     async delete(id) {
         try {
-            const sql = `DELETE FROM MOVIES WHERE id = ${id}`;
+            const sql = `DELETE FROM RENTALS WHERE id=?`;
             
             const db = await conn()
     
-            const [rows] = await db.query(sql)
+            const [rows] = await db.query(sql, [id])
     
             return rows
         } catch(err){
@@ -64,4 +64,4 @@ class Movie {
     }
 }
 
-module.exports = new Movie();
+module.exports = new Rental();

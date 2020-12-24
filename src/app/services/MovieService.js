@@ -6,6 +6,8 @@ class MovieService {
         try {
             const { title, director, copy_amount } = data
 
+            const movieRented = await Movie.find
+
             const movie = await Movie.create({ title, director, copy_amount })
 
             return {
@@ -26,6 +28,14 @@ class MovieService {
         try {
             const movie = await Movie.findOne(id)
 
+            if(!movie){
+                return {
+                    error: true,
+                    statusCode: 404,
+                    message: "Movie not found"
+                }
+            }
+
             return {
                 error: false,
                 statusCode: 200,
@@ -40,9 +50,9 @@ class MovieService {
         }
     }
 
-    async getAll(){
+    async getAll(query){
         try {
-            const movies = await Movie.find()
+            const movies = await Movie.find(query)
     
             return {
                 error: false,
@@ -58,6 +68,30 @@ class MovieService {
         }
     }
 
+    async update(id, body){
+        try {
+            let movie = await Movie.findOne(id)
+
+            if(!movie){
+                return {
+                    error: true,
+                    statusCode: 404,
+                    message: "Movie not found"
+                }
+            }
+
+            movie = await Movie.update(id, body)
+    
+            return {
+                error: false,
+                statusCode: 200,
+                data: movie
+            }
+        } catch(err){
+            return err
+        }
+    }
+    
     async delete(id){
         try {
             await Movie.delete(id)

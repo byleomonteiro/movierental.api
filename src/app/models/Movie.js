@@ -11,9 +11,9 @@ class Movie {
             
             const [created] = await db.query(insertSQL, [title, director, copy_amount])
     
-            const selectSQL = `SELECT * FROM MOVIES WHERE id = ${created.insertId}`
+            const selectSQL = `SELECT * FROM MOVIES WHERE id=?`
     
-            const [row] = await db.query((selectSQL))
+            const [[row]] = await db.query(selectSQL, [created.insertId])
     
             return row
         } catch(err){
@@ -23,11 +23,11 @@ class Movie {
 
     async findOne(id) {
         try {
-            const sql = `SELECT * FROM MOVIES where id = ${id}`;
+            const sql = `SELECT * FROM MOVIES WHERE id=?`;
             
             const db = await conn()
     
-            const [rows] = await db.query(sql)
+            const [[rows]] = await db.query(sql, [id])
     
             return rows
         } catch(err){
@@ -35,13 +35,40 @@ class Movie {
         }
     }
 
-    async find() {
+    async find(query) {
         try {
-            const sql = 'SELECT * FROM MOVIES';
-            
+            const { title } = query
+
+            let sql = 'SELECT * FROM MOVIES'
+
+            if(title){
+                sql = `SELECT * FROM MOVIES WHERE title LIKE '%${title}%'`;
+            }
+
             const db = await conn()
-    
             const [rows] = await db.query(sql)
+            
+            return rows
+        } catch(err){
+            throw err;
+        }
+    }
+
+    async update(id, body) {
+        try {
+            const keys = Object.keys(body)
+
+            keys.map((key, index) => keys[index] = key + "=?")
+
+            const sql = `UPDATE MOVIES SET ${keys.toString()} WHERE id=?;`;
+
+            const db = await conn()
+
+            const values = Object.values({ ...body, id })
+
+            await db.query(sql, values)
+
+            const rows = await this.findOne(id)
     
             return rows
         } catch(err){
@@ -51,11 +78,11 @@ class Movie {
 
     async delete(id) {
         try {
-            const sql = `DELETE FROM MOVIES WHERE id = ${id}`;
+            const sql = `DELETE FROM MOVIES WHERE id=?`;
             
             const db = await conn()
     
-            const [rows] = await db.query(sql)
+            const [rows] = await db.query(sql, [id])
     
             return rows
         } catch(err){

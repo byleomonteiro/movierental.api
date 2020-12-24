@@ -6,6 +6,7 @@ const swaggerDocument = require("../docs/swagger.json")
 const AuthController = require("../app/controllers/AuthController")
 const UserController = require("../app/controllers/UserController")
 const MovieController = require("../app/controllers/MovieController")
+const RentalController = require("../app/controllers/RentalController")
 
 const requireLogin = require("../app/middlewares/requireLogin")
 
@@ -26,8 +27,14 @@ routes.delete("/users/:userId", requireLogin, UserController.delete)
 
 // MOVIES
 routes.post("/movies", MovieController.create)
+routes.put("/movies/:movieId", MovieController.update)
 routes.get("/movies", MovieController.index)
 routes.get("/movies/:movieId", MovieController.show)
 routes.delete("/movies/:movieId", requireLogin, MovieController.delete)
+
+// RENTALS
+routes.post("/movies/rent/:movieId", requireLogin, RentalController.create)
+routes.put("/movies/return/:movieId", requireLogin, RentalController.update)
+routes.get("/rentals", requireLogin, RentalController.index)
 
 module.exports = routes
