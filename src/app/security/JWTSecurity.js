@@ -93,50 +93,5 @@ module.exports = {
           ...err
         };
       }
-    },
-
-    async decode(token) {
-        if(!token){
-            return {
-              error: true,
-              valid: false,
-              message: "Token was not provided"
-            }
-          }
-        
-        try {
-            const parsedToken = token.replace("Bearer ", "")
-        
-            const decoded = jwt.verify(parsedToken, authConfig.secret);
-        
-            if (!decoded)
-                return {
-                error: true,
-                valid: false,
-                message: "Invalid token"
-                };
-        
-            const now = new Date().getTime();
-        
-            if (now > decoded.exp)
-                return {
-                error: true,
-                valid: false,
-                message: "Token expired"
-                };
-        
-            return {
-                error: false,
-                valid: true,
-                message: "Token decoded successfully",
-                decoded,
-            };
-        } catch (err) {
-            return {
-                error: true,
-                valid: false,
-                ...err
-            };
-        }
     }
 }
