@@ -6,6 +6,7 @@ require("express-async-errors")
 
 const express = require("express")
 const helmet = require("helmet")
+const cors = require("cors")
 
 const router = require("./routes/router")
 
@@ -18,6 +19,7 @@ class App {
 
     middlewares() {
         this.server.use(express.json())
+        this.server.use(cors())
         this.server.use(helmet())
     }
 
