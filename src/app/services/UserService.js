@@ -1,12 +1,15 @@
-const User = require("../models/User")
 const { encrypt } = require("../helpers/encrypt")
 
 class UserService {
+    constructor(model) {
+        this.model = model
+    }
+
     async insert(data){
         try {
             const { name, email, password } = data
 
-            const userExists = await User.findByEmail(email)
+            const userExists = await this.model.findByEmail(email)
 
             if(userExists){
                 return {
@@ -18,7 +21,7 @@ class UserService {
 
             const hash = await encrypt(password)
 
-            const user = await User.create({ name, email, password: hash })
+            const user = await this.model.create({ name, email, password: hash })
 
             return {
                 error: false,
@@ -36,8 +39,16 @@ class UserService {
 
     async getAll(){
         try {
-            const users = await User.find()
-    
+            const users = await this.model.find()
+
+            if(!users.length){
+                return {
+                    error: true,
+                    statusCode: 404,
+                    message: 'No user found'
+                }
+            }
+
             return {
                 error: false,
                 statusCode: 200,
@@ -54,7 +65,17 @@ class UserService {
 
     async delete(id){
         try {
-            await User.delete(id)
+            const found = await this.model.findOne(id)
+
+            if(!found){
+                return {
+                    error: true,
+                    statusCode: 404,
+                    message: 'User not found'
+                }
+            }
+
+            await this.model.delete(id)
 
             return {
                 error: false,

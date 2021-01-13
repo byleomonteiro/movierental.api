@@ -1,15 +1,17 @@
 const { sign } = require("../security/JWTSecurity")
 const { decrypt } = require("../helpers/encrypt")
 
-const User = require("../models/User")
-
 class AuthService {
+    constructor(model) {
+        this.model = model;
+    }
+
     async login(credentials) {
         try {
             const { email, password } = credentials
     
-            const user = await User.findByEmail(email)
-    
+            const user = await this.model.findByEmail(email)
+
             if(!user){
                 return {
                     error: true,

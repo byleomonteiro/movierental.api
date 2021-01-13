@@ -4,6 +4,8 @@ const authConfig = require("../../config/auth")
 
 const User = require("../models/User")
 
+const model = new User()
+
 module.exports = {
     async sign(user) {
         const { id } = user
@@ -72,7 +74,7 @@ module.exports = {
           };
 
     
-        const user = await User.findOne(decoded.data)
+        const user = await model.findOne(decoded.data)
     
         if(!user) return {
           error: true,

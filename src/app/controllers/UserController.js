@@ -1,18 +1,21 @@
+const User = require("../models/User")
 const UserService = require("../services/UserService")
 
-const userService = new UserService()
+const model = new User()
+const service = new UserService(model)
 
 class UserController {
+  
     async create(req, res){
         const { name, email, password } = req.body
 
-        const response = await userService.insert({ name, email, password })
+        const response = await service.insert({ name, email, password })
 
         return res.status(response.statusCode).json(response)
     }
 
     async index(req, res){
-        const response = await userService.getAll()
+        const response = await service.getAll()
 
         return res.status(response.statusCode).json(response)
     }
@@ -20,9 +23,9 @@ class UserController {
     async delete(req, res) {
         const { userId } = req.params
 
-        const response = await userService.delete(userId)
+        const response = await service.delete(userId)
 
-        return res.status(response.statusCode).json()
+        return res.status(response.statusCode).json(response)
     }
 }
 

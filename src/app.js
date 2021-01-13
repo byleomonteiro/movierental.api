@@ -1,6 +1,6 @@
 "use strict"
 
-require("dotenv/config")
+require("./config/bootstrap")
 require("./database")
 require("express-async-errors")
 
