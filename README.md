@@ -14,7 +14,7 @@ Autor: [Leonardo Monteiro](https://github.com/Leon4rdoMonteiro)
         - Node.js, Express, JWT, SQL (MySQL), sem ORM's.
       
    + 🛠 Ferramentas/Frameworks:
-        - Docker, Insomnia
+        - Docker, Insomnia, Jest
     
    + 🔏 Segurança: 
         - bcrypt: Gerador de hashs de senhas padrão.
@@ -22,7 +22,7 @@ Autor: [Leonardo Monteiro](https://github.com/Leon4rdoMonteiro)
         
  ## 🖊 Configurações:
 
-  - Criar arquivo de váriaveis de ambiente: ```.env``` com base no arquivo: ```.env.example```
+  - Criar arquivos de váriaveis de ambiente: ```.env``` e ```.env.test``` com base no arquivo: ```.env.example```
 
 ```js
 NODE_ENV=
@@ -65,7 +65,19 @@ DB_NAME=
 
    - 3.Criar base de dados usando o script SQL (Ex: MySQL Workbench)
 
-   - 4.Executar API, porta padrão 8000:
+   - 4.Rodar testes unitários
+
+     ```bash
+     $ npm test
+     ```
+
+   - 5.Rodar testes coletando coverage reports
+
+     ```bash
+     $ npm test:cov
+     ```
+
+   - 6.Executar API, porta padrão 8000:
 
      ```bash
      $ npm run start
